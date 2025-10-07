@@ -95,7 +95,7 @@ const RepositoryItemBottom = ({ stargazersCount, forksCount, reviewCount, rating
 
 const RepositoryItem = ({ item }) => {
   return (
-    <View style={styles.container}>
+    <View key={item.id} style={styles.container}>
       <RepositoryItemTop
         avatarUrl={item.ownerAvatarUrl}
         fullName={item.fullName}

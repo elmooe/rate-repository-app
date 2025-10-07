@@ -1,8 +1,11 @@
 import StyledText from './StyledText';
 import { useFormik } from 'formik';
 import { View, StyleSheet, TextInput, Pressable } from 'react-native';
+import { useNavigate } from 'react-router-native';
 import theme from '../theme';
 import * as yup from 'yup';
+import useSignIn from "../hooks/useSignIn";
+import useAuthStorage from '../hooks/useAuthStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -77,10 +80,21 @@ const SignInForm = ({ onSubmit }) => {
 }
 
 const SignIn = () => {
+  const authStorage = useAuthStorage();
+  const [signIn] = useSignIn(authStorage);
+  const navigate = useNavigate();
 
-  const onSubmit = (values) => {
-  console.log(values);
-};
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+      navigate('/');
+    } catch (error) {
+      console.error("Sign in failed", error);
+    }
+  };
 
   return <SignInForm onSubmit={onSubmit} />;
 };
