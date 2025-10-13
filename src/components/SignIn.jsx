@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const SignInForm = ({ onSubmit }) => {
+export const SignInForm = ({ onSubmit }) => {
   const initialValues = {
     username: '',
     password: '',

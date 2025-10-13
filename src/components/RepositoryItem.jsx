@@ -1,6 +1,7 @@
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Pressable } from 'react-native';
 import StyledText from './StyledText';
 import theme from '../theme';
+import * as Linking from 'expo-linking';
 
 const styles = StyleSheet.create({
   container: {
@@ -48,19 +49,26 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     alignItems: 'center',
   },
+  urlButton: {
+    backgroundColor: theme.colors.primary,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
 });
 
 const RepositoryItemTop = ({ avatarUrl, fullName, description, language }) => {
   return (
     <View style={styles.topContainer}>
       <View style={styles.imgContainer}>
-        <Image style={styles.img} source={{ uri: avatarUrl }} />
+        <Image style={styles.img} source={{ uri: avatarUrl }} testID="repositoryItemImage" />
       </View>
       <View style={styles.topTextContainer}>
-        <StyledText fontWeight="bold">{fullName}</StyledText>
-        <StyledText color="textSecondary">{description}</StyledText>
+        <StyledText fontWeight="bold" testID="repositoryItemFullName">{fullName}</StyledText>
+        <StyledText color="textSecondary" testID="repositoryItemDescription">{description}</StyledText>
         <View style={styles.text}>
-          <StyledText style={styles.language}>{language}</StyledText>
+          <StyledText style={styles.language} testID="repositoryItemLanguage">{language}</StyledText>
         </View>
       </View>
     </View>
@@ -74,28 +82,28 @@ const RepositoryItemBottom = ({ stargazersCount, forksCount, reviewCount, rating
   return (
     <View style={styles.bottomContainer}>
       <View style={styles.bottomText}>
-        <StyledText fontWeight="bold">{parsedStargazers}</StyledText>
+        <StyledText fontWeight="bold" testID="repositoryItemStars">{parsedStargazers}</StyledText>
         <StyledText color="textSecondary">Stars</StyledText>
       </View>
       <View style={styles.bottomText}>
-        <StyledText fontWeight="bold">{parsedForks}</StyledText>
+        <StyledText fontWeight="bold" testID="repositoryItemForks">{parsedForks}</StyledText>
         <StyledText color="textSecondary">Forks</StyledText>
       </View>
       <View style={styles.bottomText}>
-        <StyledText fontWeight="bold">{reviewCount}</StyledText>
+        <StyledText fontWeight="bold" testID="repositoryItemReviews">{reviewCount}</StyledText>
         <StyledText color="textSecondary">Reviews</StyledText>
       </View>
       <View style={styles.bottomText}>
-        <StyledText fontWeight="bold">{ratingAverage}</StyledText>
+        <StyledText fontWeight="bold" testID="repositoryItemRating">{ratingAverage}</StyledText>
         <StyledText color="textSecondary">Rating</StyledText>
       </View>
     </View>
   );
 };
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, url = false }) => {
   return (
-    <View key={item.id} style={styles.container}>
+    <View testID="repositoryItem" style={styles.container}>
       <RepositoryItemTop
         avatarUrl={item.ownerAvatarUrl}
         fullName={item.fullName}
@@ -108,6 +116,13 @@ const RepositoryItem = ({ item }) => {
         reviewCount={item.reviewCount}
         ratingAverage={item.ratingAverage}
       />
+      {url && (
+        <Pressable style={styles.urlButton} onPress={() => {
+          Linking.openURL(item.url);
+        }}>
+          <StyledText color="white" fontWeight="bold">Open in Github</StyledText>
+        </Pressable>
+      )}
     </View>
   );
 };
